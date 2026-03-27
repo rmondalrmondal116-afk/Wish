@@ -3,130 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PALLABI's Mega Celebration</title>
+    <title>PALLABI's Mega Surprise</title>
     <style>
-        body { background: #fff5f8; text-align: center; font-family: 'Georgia', serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; }
-        #instruction { font-size: 16px; color: #7f8c8d; font-style: italic; position: absolute; top: 20px; width: 100%; z-index: 100; text-shadow: 1px 1px 2px white; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #fff5f8; text-align: center; font-family: 'Georgia', serif; overflow: hidden; height: 100vh; }
         
-        /* Scene 1: Butterflies & Message */
-        #scene1 { position: absolute; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; background: #fff5f8; transition: opacity 1s; }
-        .butterfly { position: absolute; width: 60px; z-index: 60; animation: flyAround 6s infinite ease-in-out; }
-        @keyframes flyAround { 0% { transform: translate(-100px, -100px) rotate(0deg); } 50% { transform: translate(100px, 50px) rotate(20deg); } 100% { transform: translate(-100px, -100px) rotate(0deg); } }
-        .wish-box { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid #ffb6c1; max-width: 80%; font-size: 19px; line-height: 1.6; color: #444; }
+        #instruction { font-size: 18px; color: #555; font-weight: bold; position: absolute; top: 20px; width: 100%; z-index: 100; text-shadow: 1px 1px 2px white; }
 
-        /* Scene 2: The Real Party (Cake, Name, Characters) */
-        #scene2 { position: absolute; width: 100%; height: 100vh; display: none; background: url('https://img.freepik.com/free-vector/birthday-party-background-with-balloons-confetti_23-2148904535.jpg') center bottom/cover; flex-direction: column; align-items: center; justify-content: flex-start; z-index: 10; padding-top: 50px; opacity: 0; transition: opacity 1s; }
-        .cake-name { font-size: 35px; color: #ff1493; font-weight: bold; font-family: 'Brush Script MT', cursive; text-shadow: 2px 2px 5px white; margin-bottom: 10px; }
+        /* Step 1: Cake Scene */
+        #scene-cake { position: absolute; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: url('https://raw.githubusercontent.com/rmondalrmondal116-afk/Wish/main/image_11.png') center bottom/cover; z-index: 10; transition: opacity 1s; }
+        .cake-wrapper { position: relative; width: 280px; margin-bottom: 50px; }
+        .cake-img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4)); }
         
-        .cake-wrapper { position: relative; margin-top: 20px; }
-        .cake-img { width: 260px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
-        
-        /* 21 Candles */
-        .candles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100px; pointer-events: none; }
         .candle { position: absolute; width: 8px; height: 45px; background: linear-gradient(#eee, #ffb6c1); border-radius: 4px; }
         .flame { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 12px; height: 18px; background: #ffd700; border-radius: 50% 50% 20% 20%; animation: flicker 0.1s infinite; box-shadow: 0 0 15px #ffd700; }
-        @keyframes flicker { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
+        @keyframes flicker { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
 
-        /* Characters Section */
-        .char-party { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-around; align-items: flex-end; padding: 0 10px; }
-        .char { position: relative; width: 75px; display: flex; flex-direction: column; align-items: center; transition: 0.5s; }
-        .char img { width: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
-        .cake-piece { width: 35px !important; position: absolute; top: 20px; display: none; }
-
-        #knife { width: 70px; position: absolute; top: 45%; display: none; cursor: pointer; z-index: 100; animation: bounce 1s infinite; }
+        #knife { width: 80px; position: absolute; top: 40%; cursor: pointer; display: none; z-index: 100; animation: bounce 1s infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Step 2: Butterfly Wish */
+        #scene-wish { position: absolute; width: 100%; height: 100vh; display: none; align-items: center; justify-content: center; z-index: 20; background: rgba(255, 245, 248, 0.9); opacity: 0; transition: opacity 1.5s; }
+        .butterfly { position: absolute; width: 60px; z-index: 30; }
+        .main-wish-box { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid #ffb6c1; max-width: 85%; z-index: 25; transform: scale(0.1); transition: transform 1.5s; }
+
+        /* Step 3: Characters */
+        #scene-chars { position: absolute; width: 100%; height: 100vh; display: none; align-items: center; justify-content: center; z-index: 40; background: #fff5f8; opacity: 0; transition: opacity 1s; }
+        .char-display { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .char-img { width: 180px; margin-bottom: 20px; transform: translateX(250%); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .char-msg { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); max-width: 85%; font-size: 18px; line-height: 1.4; opacity: 0; transition: opacity 0.5s; border: 2px solid #ffb6c1; position: relative; }
+        .char-msg::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #ffb6c1; }
     </style>
 </head>
 <body>
-    <div id="instruction">Wait, magic is happening... ✨</div>
 
-    <div id="scene1">
-        <img src="https://img.icons8.com/clouds/100/000000/butterfly.png" class="butterfly" style="top:20%; left:10%">
-        <img src="https://img.icons8.com/clouds/100/000000/butterfly.png" class="butterfly" style="top:60%; right:10%; animation-delay: 2s">
-        <div class="wish-box">
-            <h2 style="color:#e74c3c; margin-top:0;">Happy Birthday</h2>
-            Today holds no magic of its own; it is your presence that lends this day its light. May you remain as special as the interest you bring to every moment.
+    <div id="instruction">Make a wish and blow hard! 💨</div>
+
+    <div id="scene-cake">
+        <div class="cake-wrapper">
+            <div id="candle-box"></div>
+            <img src="https://img.icons8.com/external-flat-icons-inmotus-design/280/000000/external-birthday-cake-flat-icons-inmotus-design.png" class="cake-img">
+            <p style="color: #ff1493; font-weight: bold; font-size: 32px; font-family: 'Brush Script MT', cursive; position: absolute; top: 165px; left: 50%; transform: translateX(-50%); text-shadow: 1px 1px 2px white;">PALLABI</p>
+        </div>
+        <img src="https://img.icons8.com/external-avocado-kerismaker/80/000000/external-kitchen-knife-cooking-utensils-and-tools-avocado-kerismaker.png" id="knife" onclick="cutCake()">
+    </div>
+
+    <div id="scene-wish">
+        <div class="main-wish-box" id="main-wish">
+            <h2 style="color:#e74c3c; margin-bottom: 10px;">Happy Birthday PALLABI!</h2>
+            <p>Today holds no magic of its own; it is your presence that lends this day its light. May you remain as special as the interest you bring to every moment.</p>
         </div>
     </div>
 
-    <div id="scene2">
-        <div class="cake-name">PALLABI</div>
-        <div class="cake-wrapper">
-            <div id="candles"></div>
-            <img src="https://img.icons8.com/external-flat-icons-inmotus-design/260/000000/external-birthday-cake-flat-icons-inmotus-design.png" class="cake-img">
-        </div>
-
-        <img src="https://img.icons8.com/external-avocado-kerismaker/70/000000/external-kitchen-knife-cooking-utensils-and-tools-avocado-kerismaker.png" id="knife" onclick="cutCake()">
-
-        <div class="char-party">
-            <div class="char" id="krishna"><img src="https://img.icons8.com/color/100/000000/krishna.png"><p style="font-size:10px; margin:0;">Blessings</p></div>
-            <div class="char"><img src="https://img.icons8.com/color/100/000000/doraemon.png"><img src="https://img.icons8.com/emoji/35/000000/shortcake-emoji.png" class="cake-piece"></div>
-            <div class="char"><img src="https://img.icons8.com/color/100/000000/mighty-raju.png"><img src="https://img.icons8.com/emoji/35/000000/shortcake-emoji.png" class="cake-piece"></div>
+    <div id="scene-chars">
+        <div class="char-display">
+            <img src="" class="char-img" id="current-char">
+            <div class="char-msg" id="current-msg"></div>
         </div>
     </div>
 
     <script>
-        // Transition Scene 1 to 2
-        setTimeout(() => {
-            document.getElementById('scene1').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('scene1').style.display = 'none';
-                document.getElementById('scene2').style.display = 'flex';
-                setTimeout(() => { document.getElementById('scene2').style.opacity = '1'; }, 50);
-                document.getElementById('instruction').innerText = "Blow hard into the mic to put out 21 candles! 💨";
-                startMic();
-            }, 1000);
-        }, 7000);
-
-        // Generate 21 Candles
-        const cContainer = document.getElementById('candles');
-        for(let i=0; i<21; i++) {
+        // মোমবাতি সেটআপ
+        const cBox = document.getElementById('candle-box');
+        for(let i=0; i<21; i++){
             let c = document.createElement('div');
             c.className = 'candle';
-            c.style.left = Math.random() * 220 + 20 + 'px';
-            c.style.top = Math.random() * 40 + 'px';
+            c.style.left = Math.random() * 200 + 40 + 'px';
+            c.style.top = Math.random() * 30 + 'px';
             c.innerHTML = '<div class="flame"></div>';
-            cContainer.appendChild(c);
+            cBox.appendChild(c);
         }
 
+        // ফু দেওয়ার সেন্সর
         let blown = false;
-        function startMic() {
+        function startBlowDetect() {
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                const ctx = new AudioContext();
-                const analyzer = ctx.createAnalyser();
-                const source = ctx.createMediaStreamSource(stream);
-                source.connect(analyzer);
-                const data = new Uint8Array(analyzer.frequencyBinCount);
+                const audioCtx = new AudioContext();
+                const analyser = audioCtx.createAnalyser();
+                const source = audioCtx.createMediaStreamSource(stream);
+                source.connect(analyser);
+                const data = new Uint8Array(analyser.frequencyBinCount);
                 function check() {
                     if (blown) return;
-                    analyzer.getByteFrequencyData(data);
-                    if (data.reduce((a,b) => a+b)/data.length > 50) {
+                    analyser.getByteFrequencyData(data);
+                    if (data.reduce((a,b)=>a+b)/data.length > 55) {
                         blown = true;
-                        document.querySelectorAll('.flame').forEach(f => f.style.display='none');
-                        showKnife();
+                        extinguish();
                     }
                     requestAnimationFrame(check);
                 }
                 check();
             }).catch(() => {
-                document.getElementById('instruction').innerText = "Tap the candles to blow them out!";
-                cContainer.onclick = () => { if(!blown){ blown=true; document.querySelectorAll('.flame').forEach(f => f.style.display='none'); showKnife(); }};
+                document.getElementById('instruction').innerText = "Tap the candles to blow! 💨";
+                cBox.onclick = () => { if(!blown){ blown=true; extinguish(); }};
             });
         }
+        startBlowDetect();
 
-        function showKnife() {
-            document.getElementById('instruction').innerText = "Tap the knife to cut the cake!";
+        function extinguish() {
+            document.querySelectorAll('.flame').forEach(f => f.style.display='none');
+            document.getElementById('instruction').innerText = "Perfect! Now tap the knife to cut the cake! 🔪";
             document.getElementById('knife').style.display = 'block';
         }
 
         function cutCake() {
             document.getElementById('knife').style.display = 'none';
-            document.getElementById('instruction').innerText = "Happy Birthday PALLABI! 🥳";
-            document.querySelectorAll('.cake-piece').forEach(p => p.style.display = 'block');
-            document.querySelectorAll('.char').forEach(c => {
-                c.style.transform = 'translateY(-20px)';
-                setTimeout(() => c.style.transform = 'translateY(0)', 300);
-            });
+            document.getElementById('scene-cake').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('scene-cake').style.display = 'none';
+                showWish();
+            }, 1000);
+        }
+
+        function showWish() {
+            document.getElementById('scene-wish').style.display = 'flex';
+            document.getElementById('instruction').innerText = "Butterflies are bringing a message... ✨";
+            setTimeout(() => {
+                document.getElementById('scene-wish').style.opacity = '1';
+                document.getElementById('main-wish').style.transform = 'scale(1)';
+                // ৫টি প্রজাপতি ওড়ানো
+                for(let i=0; i<6; i++){
+                    let b = document.createElement('img');
+                    b.src = "https://img.icons8.com/clouds/100/000000/butterfly.png";
+                    b.className = 'butterfly';
+                    b.style.top = Math.random() * 80 + '%';
+                    document.body.appendChild(b);
+                    b.animate([{left: '-100px'}, {left: '110%'}], {duration: 3000 + i*1000, iterations: Infinity});
+                }
+            }, 100);
+            setTimeout(showCharacters, 8000);
+        }
+
+        const characters = [
+            {img: "https://img.icons8.com/color/200/000000/doraemon.png", msg: "Hey Pallabi! My gadgets say you'll have a perfect year. Keep smiling forever! Happy Birthday!"},
+            {img: "https://img.icons8.com/color/200/000000/mighty-raju.png", msg: "Eat healthy, stay strong, and enjoy every moment just like my laddoos! Have a powerful year ahead!"},
+            {img: "https://img.icons8.com/color/200/000000/krishna.png", msg: "May your life be filled with love, peace, and endless joy. My blessings are always with you, Pallabi."}
+        ];
+
+        let charIndex = 0;
+        function showCharacters() {
+            document.getElementById('scene-wish').style.opacity = '0';
+            document.getElementById('instruction').innerText = "";
+            setTimeout(() => {
+                document.getElementById('scene-wish').style.display = 'none';
+                document.getElementById('scene-chars').style.display = 'flex';
+                document.getElementById('scene-chars').style.opacity = '1';
+                cycleChars();
+            }, 1000);
+        }
+
+        function cycleChars() {
+            if(charIndex >= characters.length) {
+                document.getElementById('instruction').innerText = "Happiest Birthday PALLABI! ❤️";
+                document.getElementById('instruction').style.opacity = '1';
+                return;
+            }
+            const data = characters[charIndex];
+            const img = document.getElementById('current-char');
+            const msg = document.getElementById('current-msg');
+            
+            img.src = data.img;
+            msg.innerText = data.msg;
+            img.style.transform = 'translateX(250%)';
+            msg.style.opacity = '0';
+            
+            setTimeout(() => {
+                img.style.transform = 'translateX(0)';
+                setTimeout(() => { msg.style.opacity = '1'; }, 1000);
+            }, 100);
+
+            setTimeout(() => {
+                img.style.transform = 'translateX(-250%)';
+                msg.style.opacity = '0';
+                charIndex++;
+                setTimeout(cycleChars, 1000);
+            }, 7000); // প্রতিটি ক্যারেক্টার ৭ সেকেন্ড থাকবে
         }
     </script>
 </body>
