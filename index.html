@@ -3,182 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PALLABI's Mega Surprise</title>
+    <title>PALLABI's Mega Celebration</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #fff5f8; text-align: center; font-family: 'Georgia', serif; overflow: hidden; height: 100vh; }
+        body { background: #e0f7fa; overflow: hidden; font-family: 'Arial', sans-serif; }
+
+        /* Scenery */
+        .scenery { position: absolute; width: 100%; height: 100vh; background: linear-gradient(#81d4fa, #e1f5fe); z-index: 1; }
+        .grass { position: absolute; bottom: 0; width: 100%; height: 28vh; background: #8bc34a; border-top: 5px solid #689f38; }
+        .tree { position: absolute; bottom: 22vh; width: 100px; z-index: 2; }
         
-        #instruction { font-size: 18px; color: #555; font-weight: bold; position: absolute; top: 20px; width: 100%; z-index: 100; text-shadow: 1px 1px 2px white; }
+        #instruction { position: absolute; top: 20px; width: 100%; text-align: center; font-weight: bold; font-size: 20px; color: #2c3e50; z-index: 100; text-shadow: 2px 2px 4px white; }
 
-        /* Step 1: Cake Scene */
-        #scene-cake { position: absolute; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: url('https://raw.githubusercontent.com/rmondalrmondal116-afk/Wish/main/image_11.png') center bottom/cover; z-index: 10; transition: opacity 1s; }
-        .cake-wrapper { position: relative; width: 280px; margin-bottom: 50px; }
-        .cake-img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4)); }
+        /* The Party Crowd */
+        .characters { position: absolute; bottom: 8vh; width: 100%; display: flex; justify-content: space-around; align-items: flex-end; z-index: 10; padding: 0 10px; }
+        .char { width: 90px; text-align: center; position: relative; transition: all 0.5s; opacity: 1; }
+        .char img { width: 100%; filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.2)); }
         
-        .candle { position: absolute; width: 8px; height: 45px; background: linear-gradient(#eee, #ffb6c1); border-radius: 4px; }
-        .flame { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 12px; height: 18px; background: #ffd700; border-radius: 50% 50% 20% 20%; animation: flicker 0.1s infinite; box-shadow: 0 0 15px #ffd700; }
-        @keyframes flicker { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
+        /* Message Bubbles */
+        .bubble { 
+            background: white; border-radius: 15px; padding: 10px; font-size: 13px; 
+            position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); 
+            display: none; border: 2px solid #f06292; width: 150px; color: #333; font-weight: bold;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1); z-index: 20;
+        }
+        .bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 10px solid white; }
 
-        #knife { width: 80px; position: absolute; top: 40%; cursor: pointer; display: none; z-index: 100; animation: bounce 1s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        /* Cake & Candles */
+        .cake-zone { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 30; text-align: center; }
+        .cake-img { width: 220px; cursor: pointer; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+        .candle { position: absolute; width: 8px; height: 35px; background: #fff; border-radius: 4px; z-index: 31; border: 1px solid #ddd; }
+        .flame { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 12px; height: 18px; background: orange; border-radius: 50%; animation: flicker 0.1s infinite; box-shadow: 0 0 10px orange; }
+        @keyframes flicker { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.2); } }
+        
+        #knife { width: 70px; position: absolute; top: 45%; left: 65%; display: none; cursor: pointer; z-index: 100; animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* Step 2: Butterfly Wish */
-        #scene-wish { position: absolute; width: 100%; height: 100vh; display: none; align-items: center; justify-content: center; z-index: 20; background: rgba(255, 245, 248, 0.9); opacity: 0; transition: opacity 1.5s; }
-        .butterfly { position: absolute; width: 60px; z-index: 30; }
-        .main-wish-box { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid #ffb6c1; max-width: 85%; z-index: 25; transform: scale(0.1); transition: transform 1.5s; }
+        /* Butterfly Message (Carried) */
+        #message-container { position: absolute; top: -400px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; flex-direction: column; align-items: center; }
+        .butterfly-group { display: flex; justify-content: space-between; width: 180px; }
+        .b-fly { width: 60px; animation: flap 0.2s infinite; }
+        @keyframes flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.4); } }
+        .wish-box { background: white; padding: 25px; border-radius: 20px; border: 4px solid #f06292; box-shadow: 0 15px 30px rgba(0,0,0,0.2); width: 300px; text-align: center; margin-top: -15px; }
 
-        /* Step 3: Characters */
-        #scene-chars { position: absolute; width: 100%; height: 100vh; display: none; align-items: center; justify-content: center; z-index: 40; background: #fff5f8; opacity: 0; transition: opacity 1s; }
-        .char-display { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .char-img { width: 180px; margin-bottom: 20px; transform: translateX(250%); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .char-msg { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); max-width: 85%; font-size: 18px; line-height: 1.4; opacity: 0; transition: opacity 0.5s; border: 2px solid #ffb6c1; position: relative; }
-        .char-msg::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #ffb6c1; }
+        .confetti { position: absolute; width: 12px; height: 12px; z-index: 40; display: none; border-radius: 2px; }
     </style>
 </head>
 <body>
 
-    <div id="instruction">Make a wish and blow hard! 💨</div>
+    <div id="instruction">Wait for the magic... and then blow! 💨</div>
 
-    <div id="scene-cake">
-        <div class="cake-wrapper">
-            <div id="candle-box"></div>
-            <img src="https://img.icons8.com/external-flat-icons-inmotus-design/280/000000/external-birthday-cake-flat-icons-inmotus-design.png" class="cake-img">
-            <p style="color: #ff1493; font-weight: bold; font-size: 32px; font-family: 'Brush Script MT', cursive; position: absolute; top: 165px; left: 50%; transform: translateX(-50%); text-shadow: 1px 1px 2px white;">PALLABI</p>
-        </div>
-        <img src="https://img.icons8.com/external-avocado-kerismaker/80/000000/external-kitchen-knife-cooking-utensils-and-tools-avocado-kerismaker.png" id="knife" onclick="cutCake()">
+    <div class="scenery">
+        <div class="grass"></div>
+        <img src="https://img.icons8.com/color/120/000000/tree.png" class="tree" style="left: 8%;">
+        <img src="https://img.icons8.com/color/120/000000/tree.png" class="tree" style="right: 8%;">
     </div>
 
-    <div id="scene-wish">
-        <div class="main-wish-box" id="main-wish">
-            <h2 style="color:#e74c3c; margin-bottom: 10px;">Happy Birthday PALLABI!</h2>
-            <p>Today holds no magic of its own; it is your presence that lends this day its light. May you remain as special as the interest you bring to every moment.</p>
+    <div id="message-container">
+        <div class="butterfly-group">
+            <img src="https://img.icons8.com/clouds/100/000000/butterfly.png" class="b-fly">
+            <img src="https://img.icons8.com/clouds/100/000000/butterfly.png" class="b-fly">
         </div>
-    </div>
-
-    <div id="scene-chars">
-        <div class="char-display">
-            <img src="" class="char-img" id="current-char">
-            <div class="char-msg" id="current-msg"></div>
+        <div class="wish-box">
+            <h2 style="color:#ad1457; font-size: 20px;">Happy Birthday PALLABI</h2>
+            <p style="font-size: 15px; margin-top: 10px; line-height: 1.4; color: #444;">"Today holds no magic of its own; it is your presence that lends this day its light."</p>
         </div>
     </div>
 
-    <script>
-        // মোমবাতি সেটআপ
-        const cBox = document.getElementById('candle-box');
-        for(let i=0; i<21; i++){
-            let c = document.createElement('div');
-            c.className = 'candle';
-            c.style.left = Math.random() * 200 + 40 + 'px';
-            c.style.top = Math.random() * 30 + 'px';
-            c.innerHTML = '<div class="flame"></div>';
-            cBox.appendChild(c);
-        }
-
-        // ফু দেওয়ার সেন্সর
-        let blown = false;
-        function startBlowDetect() {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                const audioCtx = new AudioContext();
-                const analyser = audioCtx.createAnalyser();
-                const source = audioCtx.createMediaStreamSource(stream);
-                source.connect(analyser);
-                const data = new Uint8Array(analyser.frequencyBinCount);
-                function check() {
-                    if (blown) return;
-                    analyser.getByteFrequencyData(data);
-                    if (data.reduce((a,b)=>a+b)/data.length > 55) {
-                        blown = true;
-                        extinguish();
-                    }
-                    requestAnimationFrame(check);
-                }
-                check();
-            }).catch(() => {
-                document.getElementById('instruction').innerText = "Tap the candles to blow! 💨";
-                cBox.onclick = () => { if(!blown){ blown=true; extinguish(); }};
-            });
-        }
-        startBlowDetect();
-
-        function extinguish() {
-            document.querySelectorAll('.flame').forEach(f => f.style.display='none');
-            document.getElementById('instruction').innerText = "Perfect! Now tap the knife to cut the cake! 🔪";
-            document.getElementById('knife').style.display = 'block';
-        }
-
-        function cutCake() {
-            document.getElementById('knife').style.display = 'none';
-            document.getElementById('scene-cake').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('scene-cake').style.display = 'none';
-                showWish();
-            }, 1000);
-        }
-
-        function showWish() {
-            document.getElementById('scene-wish').style.display = 'flex';
-            document.getElementById('instruction').innerText = "Butterflies are bringing a message... ✨";
-            setTimeout(() => {
-                document.getElementById('scene-wish').style.opacity = '1';
-                document.getElementById('main-wish').style.transform = 'scale(1)';
-                // ৫টি প্রজাপতি ওড়ানো
-                for(let i=0; i<6; i++){
-                    let b = document.createElement('img');
-                    b.src = "https://img.icons8.com/clouds/100/000000/butterfly.png";
-                    b.className = 'butterfly';
-                    b.style.top = Math.random() * 80 + '%';
-                    document.body.appendChild(b);
-                    b.animate([{left: '-100px'}, {left: '110%'}], {duration: 3000 + i*1000, iterations: Infinity});
-                }
-            }, 100);
-            setTimeout(showCharacters, 8000);
-        }
-
-        const characters = [
-            {img: "https://img.icons8.com/color/200/000000/doraemon.png", msg: "Hey Pallabi! My gadgets say you'll have a perfect year. Keep smiling forever! Happy Birthday!"},
-            {img: "https://img.icons8.com/color/200/000000/mighty-raju.png", msg: "Eat healthy, stay strong, and enjoy every moment just like my laddoos! Have a powerful year ahead!"},
-            {img: "https://img.icons8.com/color/200/000000/krishna.png", msg: "May your life be filled with love, peace, and endless joy. My blessings are always with you, Pallabi."}
-        ];
-
-        let charIndex = 0;
-        function showCharacters() {
-            document.getElementById('scene-wish').style.opacity = '0';
-            document.getElementById('instruction').innerText = "";
-            setTimeout(() => {
-                document.getElementById('scene-wish').style.display = 'none';
-                document.getElementById('scene-chars').style.display = 'flex';
-                document.getElementById('scene-chars').style.opacity = '1';
-                cycleChars();
-            }, 1000);
-        }
-
-        function cycleChars() {
-            if(charIndex >= characters.length) {
-                document.getElementById('instruction').innerText = "Happiest Birthday PALLABI! ❤️";
-                document.getElementById('instruction').style.opacity = '1';
-                return;
-            }
-            const data = characters[charIndex];
-            const img = document.getElementById('current-char');
-            const msg = document.getElementById('current-msg');
+    <div class="cake-zone">
+        <div id="candles-box"></div>
+        <img src="https://img.icons8.com/external-flat-icons-inmotus-design/220/000000/external-birthday-cake-flat-icons-inmotus-design.png" class="cake-img">
+        <h3 style="color: #c2185b; font-family: 'Brush Script MT',
             
-            img.src = data.img;
-            msg.innerText = data.msg;
-            img.style.transform = 'translateX(250%)';
-            msg.style.opacity = '0';
-            
-            setTimeout(() => {
-                img.style.transform = 'translateX(0)';
-                setTimeout(() => { msg.style.opacity = '1'; }, 1000);
-            }, 100);
-
-            setTimeout(() => {
-                img.style.transform = 'translateX(-250%)';
-                msg.style.opacity = '0';
-                charIndex++;
-                setTimeout(cycleChars, 1000);
-            }, 7000); // প্রতিটি ক্যারেক্টার ৭ সেকেন্ড থাকবে
-        }
-    </script>
-</body>
-</html>
