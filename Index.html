@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Moment For You</title>
+    <style>
+        body { background: #fdfdfd; text-align: center; font-family: 'Times New Roman', serif; margin: 0; padding: 0; color: #2c3e50; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        #instruction { font-size: 18px; color: #7f8c8d; font-style: italic; margin-bottom: 50px; padding: 0 20px; transition: opacity 0.5s; }
+        .cake-container { position: relative; }
+        .cake { width: 160px; }
+        .candle { position: absolute; top: -55px; left: 50%; transform: translateX(-50%); width: 10px; height: 55px; background: #eee; border-radius: 4px; }
+        .flame { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); width: 16px; height: 22px; background: #ffd700; border-radius: 50% 50% 20% 20%; animation: flicker 0.1s infinite; box-shadow: 0 0 15px #ffd700; }
+        @keyframes flicker { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
+        #final-message { display: none; padding: 20px; animation: fadeIn 3.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        h1 { font-weight: 400; font-size: 28px; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; }
+        .personal-note { font-size: 20px; line-height: 1.8; max-width: 320px; font-style: italic; color: #444; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; }
+    </style>
+</head>
+<body>
+    <div id="instruction">Make a wish and blow hard into the mic... 💨</div>
+    <div class="cake-container">
+        <div id="candle-div">
+            <div class="candle"><div id="flame" class="flame"></div></div>
+        </div>
+        <img src="https://img.icons8.com/emoji/160/000000/birthday-cake-emoji.png" class="cake">
+    </div>
+    <div id="final-message">
+        <h1>Happy Birthday</h1>
+        <div class="personal-note">
+            Today holds no magic of its own; it is your presence that lends this day its light. May you remain as special as the interest you bring to every moment.
+        </div>
+    </div>
+    <script>
+        let isBlown = false;
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            const audioContext = new AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            analyser.fftSize = 512;
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            function checkBlow() {
+                if (isBlown) return;
+                analyser.getByteFrequencyData(dataArray);
+                let volume = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+                if (volume > 55) { 
+                    isBlown = true;
+                    document.getElementById('flame').style.display = 'none';
+                    document.getElementById('instruction').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('candle-div').style.display = 'none';
+                        document.getElementById('final-message').style.display = 'block';
+                    }, 800);
+                }
+                requestAnimationFrame(checkBlow);
+            }
+            checkBlow();
+        }).catch(err => {
+            document.getElementById('instruction').innerText = 'Tap the candle to blow it out...';
+            document.querySelector('.candle').onclick = function() {
+                isBlown = true;
+                document.getElementById('flame').style.display = 'none';
+                document.getElementById('instruction').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('candle-div').style.display = 'none';
+                    document.getElementById('final-message').style.display = 'block';
+                }, 800);
+            };
+        });
+    </script>
+</body>
+</html>
